@@ -9,7 +9,6 @@ import {
   Twitter,
   Facebook,
   Heart,
-  HelpCircle,
 } from "lucide-react";
 
 const socialLinks = [
@@ -150,40 +149,6 @@ export default function Footer() {
                 <p className="text-gray-400">Yes! Send us your ideas.</p>
               </div>
               <div>
-                <p className="text-gray-300 font-medium mb-1">Delivery time?</p>
-                <p className="text-gray-400">3-5 business days typically.</p>
-              </div>
-              <div>
-                <p className="text-gray-300 font-medium mb-1">File formats?</p>
-                <p className="text-gray-400">PNG, JPG, SVG available.</p>
-              </div>
-            </div>
-            <motion.a
-              href="#faq"
-              className="inline-block mt-4 text-pink-400 hover:text-pink-300 transition-colors text-sm font-medium"
-              whileHover={{ x: 5 }}
-            >
-              View all FAQs →
-            </motion.a>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between"
-        >
-          <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2025 DoodleArt. All rights reserved.
-          </p>
-          <div className="flex items-center space-x-2 text-gray-400 text-sm">
-            <span>Made with</span>
-            <Heart className="w-4 h-4 text-pink-500" />
-            <span>in India for art lovers</span>
-          </div>
-        </motion.div>
       </div>
     </footer>
   );
