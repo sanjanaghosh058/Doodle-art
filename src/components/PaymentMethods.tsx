@@ -18,7 +18,7 @@ const paymentMethods = [
   },
   {
     icon: Heart,
-    title: 'Complements',
+    title: 'Compliments',
     description: 'We love genuine appreciation!',
     features: ['Kind words', 'Reviews', 'Referrals', 'Smiles']
   }
@@ -57,7 +57,7 @@ export default function PaymentMethods() {
             Payment <span className="gradient-text">Options</span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            We accept cash, card, and complements! Choose the payment method that works best for you.
+            We accept cash, card, and compliments! Choose the payment method that works best for you.
           </p>
         </motion.div>
 

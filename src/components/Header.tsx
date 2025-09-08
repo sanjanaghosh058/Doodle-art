@@ -12,19 +12,16 @@ export default function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false)
 
   useEffect(() => {
-    const theme = localStorage.getItem('theme')
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const shouldBeDark = theme === 'dark' || (!theme && systemDark)
+    // Force dark mode
+    const shouldBeDark = true
     
     setIsDark(shouldBeDark)
-    document.documentElement.setAttribute('data-theme', shouldBeDark ? 'dark' : 'light')
+    document.documentElement.setAttribute('data-theme', 'dark')
   }, [])
 
   const toggleTheme = () => {
-    const newTheme = !isDark
-    setIsDark(newTheme)
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light')
-    document.documentElement.setAttribute('data-theme', newTheme ? 'dark' : 'light')
+    // Keep dark mode only
+    return
   }
 
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0)
@@ -60,7 +57,7 @@ export default function Header() {
             </motion.div>
 
             <nav className="hidden md:flex items-center space-x-8">
-              {['Home', 'Gallery', 'Custom', 'About', 'Contact'].map((item, index) => (
+              {['Home', 'Gallery', 'About', 'Custom', 'FAQ'].map((item, index) => (
                 <motion.a
                   key={item}
                   href={`#${item.toLowerCase()}`}
@@ -80,19 +77,6 @@ export default function Header() {
             </nav>
 
             <div className="flex items-center space-x-4">
-              <motion.button
-                onClick={toggleTheme}
-                className={`p-3 rounded-full transition-colors ${
-                  isDark 
-                    ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </motion.button>
-
               <motion.button
                 onClick={() => setIsCartOpen(true)}
                 className="relative p-3 pink-gradient text-white rounded-full hover:opacity-90 transition-opacity"

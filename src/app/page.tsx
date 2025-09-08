@@ -5,7 +5,9 @@ import { Heart, Star, Sparkles, ArrowRight } from 'lucide-react'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import Gallery from '@/components/Gallery'
+import AboutUs from '@/components/AboutUs'
 import CustomDoodle from '@/components/CustomDoodle'
+import FAQ from '@/components/FAQ'
 import PaymentMethods from '@/components/PaymentMethods'
 import Footer from '@/components/Footer'
 
@@ -15,7 +17,9 @@ export default function Home() {
       <Header />
       <Hero />
       <Gallery />
+      <AboutUs />
       <CustomDoodle />
+      <FAQ />
       <PaymentMethods />
       <Footer />
     </main>

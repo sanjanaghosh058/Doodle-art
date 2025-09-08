@@ -58,6 +58,12 @@ export default function CheckoutModal({
       title: "Cash Payment",
       description: "Pay with cash on delivery",
     },
+    {
+      id: "complements" as PaymentMethod,
+      icon: Heart,
+      title: "Compliments",
+      description: "We love genuine appreciation!",
+    },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -334,7 +340,7 @@ export default function CheckoutModal({
                   {selectedPayment === "complements" && (
                     <textarea
                       name="complement"
-                      placeholder="Share your kind words with us... *"
+                      placeholder="Share your kind compliments with us... *"
                       value={formData.complement}
                       onChange={handleInputChange}
                       required
@@ -366,7 +372,7 @@ export default function CheckoutModal({
                       <>
                         <span>
                           {selectedPayment === "complements"
-                            ? "Send Complements"
+                            ? "Send Compliments"
                             : selectedPayment === "cash"
                             ? "Place Order"
                             : "Pay Now"}

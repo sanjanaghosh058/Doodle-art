@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import {
   Palette,
   Mail,
-  Phone,
   MapPin,
   Instagram,
   Twitter,
   Facebook,
   Heart,
+  HelpCircle,
 } from "lucide-react";
 
 const socialLinks = [
@@ -22,7 +22,8 @@ const quickLinks = [
   { name: "Home", href: "#home" },
   { name: "Gallery", href: "#gallery" },
   { name: "Custom Orders", href: "#custom" },
-  { name: "About Us", href: "#about" },
+  { name: "About", href: "#about" },
+  { name: "FAQ", href: "#faq" },
   { name: "Contact", href: "#contact" },
 ];
 
@@ -101,12 +102,8 @@ export default function Footer() {
                 <span className="text-gray-400">hello@doodleart.com</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-pink-500" />
-                <span className="text-gray-400">+91 98765 43210</span>
-              </div>
-              <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-pink-500" />
-                <span className="text-gray-400">Shilong, India</span>
+                <span className="text-gray-400">India</span>
               </div>
             </div>
           </motion.div>
@@ -135,6 +132,40 @@ export default function Footer() {
               </motion.button>
             </div>
           </motion.div>
+          
+          {/* FAQ Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <h4 className="text-lg font-semibold mb-6 flex items-center space-x-2">
+              <HelpCircle className="w-5 h-5 text-pink-500" />
+              <span>Quick FAQ</span>
+            </h4>
+            <div className="space-y-3 text-sm">
+              <div>
+                <p className="text-gray-300 font-medium mb-1">Custom orders available?</p>
+                <p className="text-gray-400">Yes! Send us your ideas.</p>
+              </div>
+              <div>
+                <p className="text-gray-300 font-medium mb-1">Delivery time?</p>
+                <p className="text-gray-400">3-5 business days typically.</p>
+              </div>
+              <div>
+                <p className="text-gray-300 font-medium mb-1">File formats?</p>
+                <p className="text-gray-400">PNG, JPG, SVG available.</p>
+              </div>
+            </div>
+            <motion.a
+              href="#faq"
+              className="inline-block mt-4 text-pink-400 hover:text-pink-300 transition-colors text-sm font-medium"
+              whileHover={{ x: 5 }}
+            >
+              View all FAQs →
+            </motion.a>
+          </motion.div>
         </div>
 
         <motion.div
@@ -150,7 +181,7 @@ export default function Footer() {
           <div className="flex items-center space-x-2 text-gray-400 text-sm">
             <span>Made with</span>
             <Heart className="w-4 h-4 text-pink-500" />
-            <span>for art lovers</span>
+            <span>in India for art lovers</span>
           </div>
         </motion.div>
       </div>
