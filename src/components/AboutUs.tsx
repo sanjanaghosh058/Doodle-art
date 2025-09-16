@@ -120,6 +120,11 @@ export default function AboutUs() {
                 >
                   <div className="relative w-32 h-32 mx-auto">
                     <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="rounded-2xl object-cover"
+                    />
                     <motion.div
                       className={`absolute -inset-1 bg-gradient-to-r ${member.color} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
                       animate={{ rotate: [0, 360] }}
