@@ -22,7 +22,7 @@ const quickLinks = [
   { name: "Home", href: "#home" },
   { name: "Gallery", href: "#gallery" },
   { name: "About", href: "#about" },
-  { name: "Terms and Condition", href: "#termsandcontion" },
+  { name: "Terms and Conditions", href: "/terms" },
   { name: "FAQ", href: "#faq" },
 ];
 

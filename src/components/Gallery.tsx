@@ -10,55 +10,71 @@ import Image from 'next/image'
 const doodleArtworks = [
   {
     id: 1,
-    title: 'Whimsical Forest',
-    price: 1299,
-    image: 'https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg',
+    title: 'Cloud Dreams',
+    price: 249,
+    image: '/doodle/cloud.jpg',
     category: 'Nature',
-    description: 'A magical forest scene with cute creatures'
+    description: 'Dreamy cloud formations in artistic style'
   },
   {
     id: 2,
-    title: 'City Dreams',
-    price: 1599,
-    image: 'https://images.pexels.com/photos/1145720/pexels-photo-1145720.jpeg',
-    category: 'Urban',
-    description: 'Modern cityscape with artistic flair'
+    title: 'Custom Art',
+    price: 249,
+    image: '/doodle/customized.jpg',
+    category: 'Custom',
+    description: 'Personalized doodle art just for you'
   },
   {
     id: 3,
-    title: 'Ocean Waves',
-    price: 1199,
-    image: 'https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg',
-    category: 'Nature',
-    description: 'Peaceful ocean scene with flowing waves'
+    title: 'Dogesh Portrait',
+    price: 249,
+    image: '/doodle/dogesh.jpg',
+    category: 'Portrait',
+    description: 'Cute dog portrait in doodle style'
   },
   {
     id: 4,
-    title: 'Space Adventure',
-    price: 1799,
-    image: 'https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg',
-    category: 'Fantasy',
-    description: 'Cosmic journey through the stars'
+    title: 'Flower Power',
+    price: 249,
+    image: '/doodle/flower.jpg',
+    category: 'Nature',
+    description: 'Beautiful floral doodle design'
   },
   {
     id: 5,
-    title: 'Garden Party',
-    price: 1399,
-    image: 'https://images.pexels.com/photos/1408221/pexels-photo-1408221.jpeg',
-    category: 'Nature',
-    description: 'Colorful garden with blooming flowers'
+    title: 'Hope & Dreams',
+    price: 249,
+    image: '/doodle/hope.jpg',
+    category: 'Inspirational',
+    description: 'Uplifting and motivational artwork'
   },
   {
     id: 6,
-    title: 'Abstract Emotions',
-    price: 1699,
-    image: 'https://images.pexels.com/photos/1183992/pexels-photo-1183992.jpeg',
-    category: 'Abstract',
-    description: 'Expressive abstract composition'
+    title: 'Sweet Lollypop',
+    price: 249,
+    image: '/doodle/lolypop.jpg',
+    category: 'Fun',
+    description: 'Colorful and playful candy art'
+  },
+  {
+    id: 7,
+    title: 'Nature Scene',
+    price: 249,
+    image: '/doodle/nature.jpg',
+    category: 'Nature',
+    description: 'Serene nature landscape doodle'
+  },
+  {
+    id: 8,
+    title: 'Somnil Art',
+    price: 249,
+    image: '/doodle/somnil.jpg',
+    category: 'Portrait',
+    description: 'Artistic portrait in unique style'
   }
 ]
 
-const categories = ['All', 'Nature', 'Urban', 'Fantasy', 'Abstract']
+const categories = ['All', 'Nature', 'Custom', 'Portrait', 'Inspirational', 'Fun']
 
 export default function Gallery() {
   const { addItem } = useCart()
