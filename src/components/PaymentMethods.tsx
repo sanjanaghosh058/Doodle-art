@@ -63,7 +63,7 @@ export default function PaymentMethods() {
           viewport={{ once: true }}
           className="flex justify-center mb-16"
         >
-          {paymentMethods.map((method) => (
+          {paymentMethods.map((method, index) => (
             <motion.div
               key={method.title}
               initial={{ opacity: 0, y: 30 }}
