@@ -128,13 +128,13 @@ export default function CheckoutModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+            className="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                   Checkout
                 </h2>
                 <button
@@ -146,40 +146,41 @@ export default function CheckoutModal({
               </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row">
-              <div className="lg:w-1/2 p-6 bg-gray-50 dark:bg-gray-800">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="flex flex-col lg:flex-row overflow-y-auto">
+              {/* Order Summary - Mobile First */}
+              <div className="w-full lg:w-1/2 p-4 sm:p-6 bg-gray-50 dark:bg-gray-800 order-2 lg:order-1">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Order Summary
                 </h3>
-                <div className="space-y-3 mb-6">
+                <div className="space-y-3 mb-4 sm:mb-6 max-h-48 sm:max-h-64 lg:max-h-none overflow-y-auto">
                   {cartItems.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between"
+                      className="flex items-center justify-between p-2 sm:p-0"
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
                         <img
                           src={item.image}
                           alt={item.title}
-                          className="w-12 h-12 object-cover rounded-lg"
+                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg flex-shrink-0"
                         />
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base truncate">
                             {item.title}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-xs sm:text-sm text-gray-500">
                             Qty: {item.quantity}
                           </div>
                         </div>
                       </div>
-                      <div className="font-semibold text-gray-900 dark:text-white">
+                      <div className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base flex-shrink-0 ml-2">
                         ₹{(item.price * item.quantity).toLocaleString()}
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
-                  <div className="flex items-center justify-between text-lg font-bold">
+                  <div className="flex items-center justify-between text-base sm:text-lg font-bold">
                     <span className="text-gray-900 dark:text-white">
                       Total:
                     </span>
@@ -191,18 +192,18 @@ export default function CheckoutModal({
               </div>
 
               {/* Payment Form */}
-              <div className="lg:w-1/2 p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="w-full lg:w-1/2 p-4 sm:p-6 order-1 lg:order-2">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   {/* Payment Method Selection */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                       Payment Method
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-2 sm:space-y-3">
                       {paymentMethods.map((method) => (
                         <motion.label
                           key={method.id}
-                          className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                          className={`flex items-center p-3 sm:p-4 border-2 rounded-xl cursor-pointer transition-all ${
                             selectedPayment === method.id
                               ? "border-pink-500 bg-pink-50 dark:bg-pink-900/20"
                               : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
@@ -221,12 +222,12 @@ export default function CheckoutModal({
                             }
                             className="sr-only"
                           />
-                          <method.icon className="w-6 h-6 text-pink-500 mr-3" />
+                          <method.icon className="w-5 h-5 sm:w-6 sm:h-6 text-pink-500 mr-2 sm:mr-3 flex-shrink-0" />
                           <div>
-                            <div className="font-semibold text-gray-900 dark:text-white">
+                            <div className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
                               {method.title}
                             </div>
-                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                               {method.description}
                             </div>
                           </div>
@@ -236,7 +237,7 @@ export default function CheckoutModal({
                   </div>
 
                   {/* Contact Information */}
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <input
                       type="text"
                       name="name"
@@ -244,7 +245,7 @@ export default function CheckoutModal({
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base"
                     />
                     <input
                       type="email"
@@ -253,7 +254,7 @@ export default function CheckoutModal({
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base"
                     />
                   </div>
 
@@ -264,7 +265,7 @@ export default function CheckoutModal({
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base"
                   />
 
                   <input
@@ -274,26 +275,26 @@ export default function CheckoutModal({
                     value={formData.address}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm sm:text-base"
                   />
 
                   {/* QR Code Payment */}
                   {selectedPayment === "qr" && (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                       <div className="text-center">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                           Scan QR Code to Pay
                         </h3>
-                        <div className="bg-white p-4 rounded-xl inline-block shadow-lg">
+                        <div className="bg-white p-3 sm:p-4 rounded-xl inline-block shadow-lg">
                           <Image
                             src="/payment/QR.jpg"
                             alt="Payment QR Code"
-                            width={200}
-                            height={200}
-                            className="rounded-lg"
+                            width={150}
+                            height={150}
+                            className="rounded-lg sm:w-[200px] sm:h-[200px] w-[150px] h-[150px]"
                           />
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-3 sm:mt-4 px-2">
                           Scan this QR code with any UPI app to complete your payment of ₹{totalPrice.toLocaleString()}
                         </p>
                       </div>
@@ -301,8 +302,8 @@ export default function CheckoutModal({
                   )}
 
                   {/* Security Notice */}
-                  <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                    <Lock className="w-4 h-4" />
+                  <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                    <Lock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                     <span>Your information is secure and encrypted</span>
                   </div>
 
@@ -310,13 +311,13 @@ export default function CheckoutModal({
                   <motion.button
                     type="submit"
                     disabled={isProcessing}
-                    className="w-full py-4 pink-gradient text-white rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center space-x-2"
+                    className="w-full py-3 sm:py-4 pink-gradient text-white rounded-xl font-semibold text-base sm:text-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center space-x-2"
                     whileHover={{ scale: isProcessing ? 1 : 1.02 }}
                     whileTap={{ scale: isProcessing ? 1 : 0.98 }}
                   >
                     {isProcessing ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         <span>Processing...</span>
                       </>
                     ) : (
@@ -324,7 +325,7 @@ export default function CheckoutModal({
                         <span>
                           Pay Now
                         </span>
-                        <span>₹{totalPrice.toLocaleString()}</span>
+                        <span className="hidden sm:inline">₹{totalPrice.toLocaleString()}</span>
                       </>
                     )}
                   </motion.button>
