@@ -45,7 +45,7 @@ export default function Footer() {
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
               Creating unique hand-drawn doodles that bring joy and personality
-              to your world. We accept cash, card, and compliments!
+              to your world. All artworks at affordable prices!
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (

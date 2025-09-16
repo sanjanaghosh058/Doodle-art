@@ -3,15 +3,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
-  CreditCard,
-  Banknote,
-  Heart,
+  QrCode,
   Lock,
   CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { CartItem } from "@/hooks/useCart";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -19,14 +18,14 @@ interface CheckoutModalProps {
   cartItems: CartItem[];
 }
 
-type PaymentMethod = "card" | "cash" | "complements";
+type PaymentMethod = "qr";
 
 export default function CheckoutModal({
   isOpen,
   onClose,
   cartItems,
 }: CheckoutModalProps) {
-  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>("card");
+  const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>("qr");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,10 +33,6 @@ export default function CheckoutModal({
     email: "",
     phone: "",
     address: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    complement: "",
   });
 
   const totalPrice = cartItems.reduce(
@@ -47,22 +42,10 @@ export default function CheckoutModal({
 
   const paymentMethods = [
     {
-      id: "card" as PaymentMethod,
-      icon: CreditCard,
-      title: "Card Payment",
-      description: "Pay securely with your credit/debit card",
-    },
-    {
-      id: "cash" as PaymentMethod,
-      icon: Banknote,
-      title: "Cash Payment",
-      description: "Pay with cash on delivery",
-    },
-    {
-      id: "complements" as PaymentMethod,
-      icon: Heart,
-      title: "Compliments",
-      description: "We love genuine appreciation!",
+      id: "qr" as PaymentMethod,
+      icon: QrCode,
+      title: "QR Code Payment",
+      description: "Scan QR code to pay via UPI",
     },
   ];
 
@@ -76,11 +59,7 @@ export default function CheckoutModal({
     setIsProcessing(false);
     setIsSuccess(true);
 
-    if (selectedPayment === "complements") {
-      toast.success("Thank you for your kind words! 💖");
-    } else {
-      toast.success("Payment successful! 🎉");
-    }
+    toast.success("Payment successful! 🎉");
 
     // Reset after showing success
     setTimeout(() => {
@@ -122,14 +101,10 @@ export default function CheckoutModal({
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               </motion.div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {selectedPayment === "complements"
-                  ? "Thank You!"
-                  : "Payment Successful!"}
+                Payment Successful!
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                {selectedPayment === "complements"
-                  ? "Your kind words mean the world to us!"
-                  : "Your order has been confirmed and will be processed soon."}
+                Your order has been confirmed and will be processed soon.
               </p>
             </motion.div>
           </motion.div>
@@ -302,51 +277,27 @@ export default function CheckoutModal({
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   />
 
-                  {/* Payment Details */}
-                  {selectedPayment === "card" && (
-                    <div className="space-y-4">
-                      <input
-                        type="text"
-                        name="cardNumber"
-                        placeholder="Card Number *"
-                        value={formData.cardNumber}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                      />
-                      <div className="grid grid-cols-2 gap-4">
-                        <input
-                          type="text"
-                          name="expiryDate"
-                          placeholder="MM/YY *"
-                          value={formData.expiryDate}
-                          onChange={handleInputChange}
-                          required
-                          className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                        />
-                        <input
-                          type="text"
-                          name="cvv"
-                          placeholder="CVV *"
-                          value={formData.cvv}
-                          onChange={handleInputChange}
-                          required
-                          className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                        />
+                  {/* QR Code Payment */}
+                  {selectedPayment === "qr" && (
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                          Scan QR Code to Pay
+                        </h3>
+                        <div className="bg-white p-4 rounded-xl inline-block shadow-lg">
+                          <Image
+                            src="/payment/QR.jpg"
+                            alt="Payment QR Code"
+                            width={200}
+                            height={200}
+                            className="rounded-lg"
+                          />
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          Scan this QR code with any UPI app to complete your payment of ₹{totalPrice.toLocaleString()}
+                        </p>
                       </div>
                     </div>
-                  )}
-
-                  {selectedPayment === "complements" && (
-                    <textarea
-                      name="complement"
-                      placeholder="Share your kind compliments with us... *"
-                      value={formData.complement}
-                      onChange={handleInputChange}
-                      required
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
-                    />
                   )}
 
                   {/* Security Notice */}
@@ -371,15 +322,9 @@ export default function CheckoutModal({
                     ) : (
                       <>
                         <span>
-                          {selectedPayment === "complements"
-                            ? "Send Compliments"
-                            : selectedPayment === "cash"
-                            ? "Place Order"
-                            : "Pay Now"}
+                          Pay Now
                         </span>
-                        {selectedPayment !== "complements" && (
-                          <span>₹{totalPrice.toLocaleString()}</span>
-                        )}
+                        <span>₹{totalPrice.toLocaleString()}</span>
                       </>
                     )}
                   </motion.button>

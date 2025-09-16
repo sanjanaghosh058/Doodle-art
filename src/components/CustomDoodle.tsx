@@ -7,10 +7,10 @@ import { useCart } from '@/hooks/useCart'
 import toast from 'react-hot-toast'
 
 const customStyles = [
-  { id: 'minimalist', name: 'Minimalist', price: 1999, description: 'Clean, simple lines' },
-  { id: 'detailed', name: 'Detailed', price: 3499, description: 'Intricate patterns and details' },
-  { id: 'abstract', name: 'Abstract', price: 2799, description: 'Creative and artistic interpretation' },
-  { id: 'realistic', name: 'Realistic', price: 4199, description: 'Life-like representation' }
+  { id: 'minimalist', name: 'Minimalist', price: 249, description: 'Clean, simple lines' },
+  { id: 'detailed', name: 'Detailed', price: 249, description: 'Intricate patterns and details' },
+  { id: 'abstract', name: 'Abstract', price: 249, description: 'Creative and artistic interpretation' },
+  { id: 'realistic', name: 'Realistic', price: 249, description: 'Life-like representation' }
 ]
 
 const sizes = [

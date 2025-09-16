@@ -61,16 +61,16 @@ export default function PaymentMethods() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
-          className="grid md:grid-cols-3 gap-8 mb-16"
+          className="flex justify-center mb-16"
         >
-          {paymentMethods.map((method, index) => (
+          {paymentMethods.map((method) => (
             <motion.div
               key={method.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: 0.1 }}
               viewport={{ once: true }}
-              className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg card-hover text-center"
+              className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg card-hover text-center max-w-md"
             >
               <div className="w-16 h-16 pink-gradient rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <method.icon className="w-8 h-8 text-white" />

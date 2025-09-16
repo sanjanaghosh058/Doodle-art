@@ -46,7 +46,7 @@ export default function Hero() {
                 className="text-xl text-gray-600 dark:text-gray-300 max-w-lg leading-relaxed"
               >
                 Discover one-of-a-kind hand-drawn doodles that bring personality and charm to any space. 
-                We accept cash, card, and compliments!
+                All artworks available at just ₹249 each!
               </motion.p>
             </div>
 
