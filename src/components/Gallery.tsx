@@ -19,7 +19,7 @@ const doodleArtworks = [
   {
     id: 2,
     title: 'Custom Art',
-    price: 249,
+    price: 349,
     image: '/doodle/customized.jpg',
     category: 'Custom',
     description: 'Personalized doodle art just for you'
@@ -27,7 +27,7 @@ const doodleArtworks = [
   {
     id: 3,
     title: 'Dogesh Portrait',
-    price: 249,
+    price: 349,
     image: '/doodle/dogesh.jpg',
     category: 'Portrait',
     description: 'Cute dog portrait in doodle style'
@@ -59,7 +59,7 @@ const doodleArtworks = [
   {
     id: 7,
     title: 'Nature Scene',
-    price: 249,
+    price: 349,
     image: '/doodle/nature.jpg',
     category: 'Nature',
     description: 'Serene nature landscape doodle'
@@ -67,7 +67,7 @@ const doodleArtworks = [
   {
     id: 8,
     title: 'Custom Art 2',
-    price: 249,
+    price: 349,
     image: '/doodle/somnil.jpg',
     category: 'Portrait',
     description: 'Artistic portrait in unique style'
