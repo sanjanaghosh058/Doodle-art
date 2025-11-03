@@ -74,6 +74,12 @@ const doodleArtworks = [
   }
 ]
 
+// Add universal discounted price (₹249)
+const saleArtworks = doodleArtworks.map(item => ({
+  ...item,
+  salePrice: 249
+}))
+
 const categories = ['All', 'Nature', 'Custom', 'Portrait', 'Inspirational', 'Fun']
 
 export default function Gallery() {
@@ -81,14 +87,15 @@ export default function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchTerm, setSearchTerm] = useState('')
 
-  const filteredArtworks = doodleArtworks.filter(artwork => {
+  const filteredArtworks = saleArtworks.filter(artwork => {
     const matchesCategory = selectedCategory === 'All' || artwork.category === selectedCategory
-    const matchesSearch = artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch =
+      artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      artwork.description.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesCategory && matchesSearch
   })
 
-  const handleAddToCart = (artwork: typeof doodleArtworks[0]) => {
+  const handleAddToCart = (artwork: typeof saleArtworks[0]) => {
     addItem(artwork)
     toast.success(`${artwork.title} added to cart!`)
   }
@@ -96,6 +103,7 @@ export default function Gallery() {
   return (
     <section id="gallery" className="py-20 px-6 bg-white dark:bg-gray-900 transition-colors">
       <div className="container mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -104,14 +112,14 @@ export default function Gallery() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            Our <span className="gradient-text">Gallery</span>
+            End of Year <span className="gradient-text">Sale Gallery 🎉</span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Explore our collection of unique hand-drawn doodles, each piece crafted with love and attention to detail.
+            All our hand-drawn doodle artworks are now available for only ₹249!
           </p>
         </motion.div>
 
-        {/* Search and Filter */}
+        {/* Search + Filter */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -169,8 +177,14 @@ export default function Gallery() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg card-hover group"
+              className="bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg card-hover group relative"
             >
+              {/* Sale Badge */}
+              <div className="absolute top-4 left-4 bg-pink-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md z-10">
+                SALE
+              </div>
+
+              {/* Image */}
               <div className="relative overflow-hidden">
                 <Image
                   src={artwork.image}
@@ -190,6 +204,7 @@ export default function Gallery() {
                 </motion.button>
               </div>
 
+              {/* Content */}
               <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
@@ -200,9 +215,24 @@ export default function Gallery() {
                       {artwork.category}
                     </span>
                   </div>
+
+                  {/* Price Section */}
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                      ₹{artwork.price.toLocaleString()}
+                    <div className="flex flex-col items-end">
+                      {/* Original Price (Struck through) */}
+                      <div className="text-sm sm:text-base text-gray-400 line-through">
+                        ₹{artwork.price.toLocaleString()}
+                      </div>
+
+                      {/* Discounted Price */}
+                      <div className="text-xl sm:text-2xl font-bold text-pink-600 dark:text-pink-400">
+                        ₹{artwork.salePrice.toLocaleString()}
+                      </div>
+
+                      {/* Badge */}
+                      <span className="text-xs bg-pink-500/10 text-pink-600 dark:text-pink-400 px-2 py-1 rounded-full mt-1">
+                        End of Year Sale 🎉
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -225,6 +255,7 @@ export default function Gallery() {
           ))}
         </motion.div>
 
+        {/* No Results */}
         {filteredArtworks.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
