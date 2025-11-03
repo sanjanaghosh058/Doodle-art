@@ -5,7 +5,7 @@ import { CreditCard, Banknote, Heart, Shield, Clock, Award } from 'lucide-react'
 
 const paymentMethods = [
   {
-    icon: QR,
+    icon: qr,
     title: 'QR Payments',
     description: 'Secure and instant payments via PhonePe or Google Pay',
     features: ['Google Pay', 'PhonePe', 'UPI Payments'],
