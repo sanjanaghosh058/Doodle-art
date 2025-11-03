@@ -11,7 +11,7 @@ const doodleArtworks = [
   {
     id: 1,
     title: 'Cloud Dreams',
-    price: 249,
+    price: 399,
     image: '/doodle/cloud.jpg',
     category: 'Nature',
     description: 'Dreamy cloud formations in artistic style'
@@ -35,7 +35,7 @@ const doodleArtworks = [
   {
     id: 4,
     title: 'Flower Power',
-    price: 249,
+    price: 350,
     image: '/doodle/flower.jpg',
     category: 'Nature',
     description: 'Beautiful floral doodle design'
@@ -43,7 +43,7 @@ const doodleArtworks = [
   {
     id: 5,
     title: 'Hope & Dreams',
-    price: 249,
+    price: 399,
     image: '/doodle/hope.jpg',
     category: 'Inspirational',
     description: 'Uplifting and motivational artwork'
@@ -51,7 +51,7 @@ const doodleArtworks = [
   {
     id: 6,
     title: 'Sweet Lollypop',
-    price: 249,
+    price: 39,
     image: '/doodle/lolypop.jpg',
     category: 'Fun',
     description: 'Colorful and playful candy art'
@@ -66,7 +66,7 @@ const doodleArtworks = [
   },
   {
     id: 8,
-    title: 'Somnil Art',
+    title: 'Custom Art 2',
     price: 249,
     image: '/doodle/somnil.jpg',
     category: 'Portrait',
