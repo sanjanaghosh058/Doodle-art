@@ -53,7 +53,7 @@ export default function Header() {
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </div>
-              <h1 className="text-2xl font-bold gradient-text">DoodleArt</h1>
+              <h1 className="text-2xl font-bold gradient-text">Blvshy</h1>
             </motion.div>
 
             <nav className="hidden md:flex items-center space-x-8">
