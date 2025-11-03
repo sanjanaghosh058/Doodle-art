@@ -1,11 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { CreditCard, Banknote, Heart, Shield, Clock, Award } from 'lucide-react'
+import { QrCode, Banknote, Shield, Clock, Award } from 'lucide-react' // ✅ Added QrCode icon
 
 const paymentMethods = [
   {
-    icon: qr,
+    icon: QrCode, // ✅ Fixed QR icon
     title: 'QR Payments',
     description: 'Secure and instant payments via PhonePe or Google Pay',
     features: ['Google Pay', 'PhonePe', 'UPI Payments'],
