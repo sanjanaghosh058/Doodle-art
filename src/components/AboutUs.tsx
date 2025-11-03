@@ -21,7 +21,22 @@ const teamMembers = [
       "Visual Storytelling",
     ],
   },
-
+  {
+    name: "Subhrajit Mukherjee",
+    role: "CTO",
+    alias: "Tech Maestro",
+    description:
+      "The tech architect behind our digital ecosystem. Subhrajit ensures our platform is fast, scalable, and beautifully engineered to showcase creativity seamlessly.",
+    image: "/about/subhrajit.jpg",
+    icon: Code,
+    color: "from-blue-500 to-cyan-500",
+    skills: [
+      "Next.js & React",
+      "System Architecture",
+      "Automation & AI Integration",
+      "Performance Optimization",
+    ],
+  },
   {
     name: "Somnil Neogi",
     role: "CMO",
@@ -176,7 +191,9 @@ export default function AboutUs() {
                           key={skill}
                           initial={{ opacity: 0, scale: 0 }}
                           whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: index * 0.2 + skillIndex * 0.1 }}
+                          transition={{
+                            delay: index * 0.2 + skillIndex * 0.1,
+                          }}
                           viewport={{ once: true }}
                           className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-xs border border-gray-600 hover:border-pink-500/50 transition-colors"
                         >
@@ -239,7 +256,7 @@ export default function AboutUs() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-pink-900/20 to-orange-900/20 rounded-3xl p-8 border border-pink-700">
+          <div className="bg-gradient-to-r from-pink-900/20 to-blue-900/20 rounded-3xl p-8 border border-pink-700/50">
             <h3 className="text-2xl font-bold text-white mb-4">
               Ready to Work With Us?
             </h3>
