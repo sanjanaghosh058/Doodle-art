@@ -7,15 +7,11 @@ import {
   Phone,
   MapPin,
   Instagram,
-  Twitter,
-  Facebook,
   Heart,
 } from "lucide-react";
 
 const socialLinks = [
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Facebook, href: "#", label: "Facebook" },
+  { icon: Instagram, href: "#", label: "Instagram" }
 ];
 
 const quickLinks = [
@@ -157,7 +153,7 @@ export default function Footer() {
           className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between"
         >
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2024 DoodleArt. Made with{" "}
+            © 2025 DoodleArt. Made with{" "}
             <Heart className="w-4 h-4 inline text-pink-500" /> by our creative
             team.
           </p>
