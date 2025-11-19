@@ -1,10 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Palette, ShoppingCart, Sun, Moon } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useCart } from '@/hooks/useCart'
 import CartModal from './CartModal'
+import Image from 'next/image'
 
 export default function Header() {
   const { items } = useCart()
@@ -40,22 +41,28 @@ export default function Header() {
       >
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <motion.div 
-              className="flex items-center space-x-3"
+            
+            {/* LOGO + BRAND NAME */}
+            <motion.a 
+              href="#home"
+              className="flex items-center space-x-3 cursor-pointer"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <div className="relative">
-                <Palette className="w-8 h-8 text-pink-500" />
-                <motion.div
-                  className="absolute -top-1 -right-1 w-3 h-3 bg-pink-400 rounded-full"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+              {/* LOGO IMAGE */}
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/logo/logo.png"
+                  alt="Website Logo"
+                  fill
+                  className="object-contain rounded-lg"
                 />
               </div>
-              <h1 className="text-2xl font-bold gradient-text">Blvshy</h1>
-            </motion.div>
 
+              <h1 className="text-2xl font-bold gradient-text">Blvshy</h1>
+            </motion.a>
+
+            {/* NAVIGATION */}
             <nav className="hidden md:flex items-center space-x-8">
               {['Home', 'Gallery', 'About', 'Custom', 'FAQ'].map((item, index) => (
                 <motion.a
@@ -76,6 +83,7 @@ export default function Header() {
               ))}
             </nav>
 
+            {/* CART BUTTON */}
             <div className="flex items-center space-x-4">
               <motion.button
                 onClick={() => setIsCartOpen(true)}
