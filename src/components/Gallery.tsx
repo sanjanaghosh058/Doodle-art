@@ -12,7 +12,7 @@ const doodleArtworks = [
     id: 1,
     title: 'Cloud Dreams',
     price: 399,
-    image: '/doodle/Cloud Dreams.jpg',
+    image: '/doodle/cloud dreams.jpg',
     category: 'Nature',
     description: 'Dreamy cloud formations in artistic style'
   },
