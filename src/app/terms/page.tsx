@@ -7,25 +7,21 @@ import Link from "next/link";
 export default function TermsAndConditions() {
   const sections = [
     {
-      icon: FileText,
       title: "1. Acceptance of Terms",
       content:
         "By accessing and using DoodleArt's services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.",
     },
     {
-      icon: Shield,
       title: "2. Service Description",
       content:
         "DoodleArt provides hand-drawn doodle art services including pre-made artworks and custom doodle creation. All artworks are original creations by our artists and are protected by copyright laws.",
     },
     {
-      icon: CreditCard,
       title: "3. Payment Terms",
       content:
         "We accept payments via cash, card, UPI, and QR code payments. All prices are in Indian Rupees (₹). Payment must be completed before artwork delivery. Custom orders require full payment upfront.",
     },
     {
-      icon: Users,
       title: "4. Custom Orders",
       content:
         "Custom doodle orders are non-refundable once work has begun. Delivery times are estimates and may vary based on complexity. We reserve the right to decline custom orders that violate our content policy.",
