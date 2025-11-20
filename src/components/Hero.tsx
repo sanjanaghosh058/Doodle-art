@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { Heart, Star, Sparkles, ArrowRight } from 'lucide-react'
-import Image from 'next/image'
+import { motion } from "framer-motion";
+import { Heart, Star, Sparkles, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export default function Hero() {
   return (
@@ -33,7 +33,7 @@ export default function Hero() {
                 transition={{ delay: 0.6 }}
                 className="text-5xl lg:text-7xl font-bold leading-tight"
               >
-                Unique{' '}
+                Unique{" "}
                 <span className="gradient-text">Doodle</span>
                 <br />
                 Art Collection
@@ -88,7 +88,7 @@ export default function Hero() {
                 { number: '500+', label: 'Happy Customers' },
                 { number: '1000+', label: 'Artworks Created' },
                 { number: '5★', label: 'Average Rating' }
-              ].map((stat, index) => (
+              ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.number}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
@@ -112,8 +112,8 @@ export default function Hero() {
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               >
                 <Image
-                  src="https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg?auto=compress&cs=tinysrgb&w=600"
-                  alt="Beautiful doodle art"
+                  src="/logo/WELCOME.jpg"
+                  alt="Welcome doodle art"
                   width={600}
                   height={600}
                   className="rounded-3xl shadow-2xl object-cover"
@@ -147,5 +147,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }
