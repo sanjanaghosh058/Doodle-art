@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Shield, FileText, Users, CreditCard } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function TermsAndConditions() {
@@ -32,7 +32,7 @@ export default function TermsAndConditions() {
     {
       title: "5. Intellectual Property",
       content:
-        "Upon full payment, customers receive usage rights for personal use. Commercial usage requires separate licensing agreement. DoodleArt retains copyright and may use artworks for promotional purposes.",
+        "Upon full payment, customers receive usage rights for personal use. Commercial usage requires a separate licensing agreement. DoodleArt retains copyright and may use artworks for promotional purposes.",
     },
     {
       title: "6. Delivery and Returns",
@@ -42,7 +42,7 @@ export default function TermsAndConditions() {
     {
       title: "7. Privacy Policy",
       content:
-        "We collect and store customer information necessary for order fulfillment. Personal data is not shared with third parties except for payment processing and shipping. We use cookies to improve user experience.",
+        "We collect and store customer information necessary for order fulfillment. Personal data is not shared with third parties except for payment processing and shipping. Cookies are used to improve user experience.",
     },
     {
       title: "8. Limitation of Liability",
@@ -91,9 +91,7 @@ export default function TermsAndConditions() {
             Please read these terms and conditions carefully before using our
             services.
           </p>
-          <div className="mt-4 text-sm text-gray-400">
-            Last updated: September 2025
-          </div>
+          <div className="mt-4 text-sm text-gray-400">Last updated: September 2025</div>
         </motion.div>
 
         {/* Main Sections */}
@@ -106,19 +104,10 @@ export default function TermsAndConditions() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="bg-gray-800 rounded-2xl p-6 lg:p-8 border border-gray-700"
             >
-              <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-                <div className="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <section.icon className="w-6 h-6 text-pink-400" />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-xl lg:text-2xl font-bold text-white mb-4">
-                    {section.title}
-                  </h2>
-                  <p className="text-gray-300 leading-relaxed">
-                    {section.content}
-                  </p>
-                </div>
-              </div>
+              <h2 className="text-xl lg:text-2xl font-bold text-white mb-4">
+                {section.title}
+              </h2>
+              <p className="text-gray-300 leading-relaxed">{section.content}</p>
             </motion.div>
           ))}
         </div>
