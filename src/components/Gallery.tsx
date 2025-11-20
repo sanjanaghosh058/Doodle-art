@@ -52,7 +52,7 @@ const doodleArtworks = [
     id: 6,
     title: 'Sweet Lollypop',
     price: 399,
-    image: '/doodle/Sweet Lolypop.jpg',
+    image: '/doodle/Sweet Lollypop.jpg',
     category: 'Fun',
     description: 'Colorful and playful candy art'
   },
