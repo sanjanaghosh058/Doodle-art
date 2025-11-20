@@ -20,7 +20,7 @@ const doodleArtworks = [
     id: 2,
     title: 'Custom Art',
     price: 349,
-    image: '/doodle/customized.jpg',
+    image: '/doodle/custom doodle art 1.jpg',
     category: 'Custom',
     description: 'Personalized doodle art just for you'
   },
@@ -28,7 +28,7 @@ const doodleArtworks = [
     id: 3,
     title: 'Dogesh Portrait',
     price: 349,
-    image: '/doodle/dogesh.jpg',
+    image: '/doodle/Dogesh Portrait.jpg',
     category: 'Portrait',
     description: 'Cute dog portrait in doodle style'
   },
@@ -36,7 +36,7 @@ const doodleArtworks = [
     id: 4,
     title: 'Flower Power',
     price: 350,
-    image: '/doodle/flower.jpg',
+    image: '/doodle/Flower Power.jpg',
     category: 'Nature',
     description: 'Beautiful floral doodle design'
   },
@@ -44,7 +44,7 @@ const doodleArtworks = [
     id: 5,
     title: 'Hope & Dreams',
     price: 399,
-    image: '/doodle/hope.jpg',
+    image: '/doodle/Hope & Dreams.jpg',
     category: 'Inspirational',
     description: 'Uplifting and motivational artwork'
   },
@@ -52,7 +52,7 @@ const doodleArtworks = [
     id: 6,
     title: 'Sweet Lollypop',
     price: 399,
-    image: '/doodle/lolypop.jpg',
+    image: '/doodle/Sweet Lolypop.jpg',
     category: 'Fun',
     description: 'Colorful and playful candy art'
   },
@@ -60,7 +60,7 @@ const doodleArtworks = [
     id: 7,
     title: 'Nature Scene',
     price: 349,
-    image: '/doodle/nature.jpg',
+    image: '/doodle/Nature Scene.jpg',
     category: 'Nature',
     description: 'Serene nature landscape doodle'
   },
@@ -68,7 +68,7 @@ const doodleArtworks = [
     id: 8,
     title: 'Custom Art 2',
     price: 349,
-    image: '/doodle/somnil.jpg',
+    image: '/doodle/custom doodle art 2.jpg',
     category: 'Portrait',
     description: 'Artistic portrait in unique style'
   }
