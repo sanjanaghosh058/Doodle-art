@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { ShoppingCart, Filter, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useCart } from '@/hooks/useCart'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
@@ -80,12 +80,29 @@ const saleArtworks = doodleArtworks.map(item => ({
   salePrice: 249
 }))
 
-const categories = ['All', 'Nature', 'Custom', 'Portrait', 'Inspirational', 'Fun']
+const categories = ['All', 'Nature', 'Custom', 'Portrait', 'Inspirational', 'Fun'] as const
+type Category = typeof categories[number]
+type Artwork = typeof saleArtworks[0]
 
 export default function Gallery() {
   const { addItem } = useCart()
-  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [selectedCategory, setSelectedCategory] = useState<Category>('All')
   const [searchTerm, setSearchTerm] = useState('')
+
+  // mode: 'photo' = Doodle Photo Edit (default), 'sketch' = Doodle Sketch Art (upload mandatory)
+  const [mode, setMode] = useState<'photo' | 'sketch'>('photo')
+
+  // For sketch flow: pending artwork waiting for image upload
+  const [pendingArtwork, setPendingArtwork] = useState<Artwork | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const [pendingFileUrl, setPendingFileUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    // cleanup object URL when component unmounts or pendingFileUrl changes
+    return () => {
+      if (pendingFileUrl) URL.revokeObjectURL(pendingFileUrl)
+    }
+  }, [pendingFileUrl])
 
   const filteredArtworks = saleArtworks.filter(artwork => {
     const matchesCategory = selectedCategory === 'All' || artwork.category === selectedCategory
@@ -95,9 +112,83 @@ export default function Gallery() {
     return matchesCategory && matchesSearch
   })
 
-  const handleAddToCart = (artwork: typeof saleArtworks[0]) => {
-    addItem(artwork)
-    toast.success(`${artwork.title} added to cart!`)
+  const handleAddToCart = (artwork: Artwork) => {
+    if (mode === 'photo') {
+      // simple flow: add item with salePrice (store may override to 249)
+      addItem({
+        id: artwork.id,
+        title: artwork.title,
+        price: artwork.salePrice ?? 249,
+        image: artwork.image,
+        category: artwork.category,
+        quantity: 1,
+        isCustom: false,
+      })
+      toast.success(`${artwork.title} added to cart!`)
+      return
+    }
+
+    // sketch mode: require upload
+    setPendingArtwork(artwork)
+    // trigger hidden file input
+    fileInputRef.current?.click()
+  }
+
+  const onFileSelected = (file?: File | null) => {
+    if (!file) {
+      // user cancelled selection
+      if (pendingArtwork) {
+        toast.error('Upload required for Sketch Art. Cancelled.')
+        setPendingArtwork(null)
+      }
+      return
+    }
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select a valid image file.')
+      return
+    }
+
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      toast.error('Image too large. Max 5MB.')
+      return
+    }
+
+    // create preview URL and add to cart using that URL as image
+    const url = URL.createObjectURL(file)
+    setPendingFileUrl(url)
+
+    if (!pendingArtwork) {
+      toast.error('No artwork selected to attach the image to.')
+      URL.revokeObjectURL(url)
+      setPendingFileUrl(null)
+      return
+    }
+
+    // add item with image set to the uploaded file preview
+    addItem({
+      id: Date.now(), // unique id for this customised item
+      title: `${pendingArtwork.title} (Sketch Art)`,
+      price: pendingArtwork.salePrice ?? 249,
+      image: url,
+      category: pendingArtwork.category,
+      quantity: 1,
+      isCustom: true,
+      customDetails: {
+        description: '', // sketch mode: description not required
+        size: '',
+        style: 'Sketch Art',
+        deadline: ''
+      }
+    })
+
+    toast.success(`${pendingArtwork.title} (Sketch) added to cart!`)
+    // cleanup pending states
+    setPendingArtwork(null)
+    // Note: keep preview URL in cart item; we don't revoke it immediately as cart uses it.
+    setPendingFileUrl(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   return (
@@ -109,73 +200,117 @@ export default function Gallery() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-6"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3">
             End of Year <span className="gradient-text">Sale Gallery 🎉</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             All our hand-drawn doodle artworks are now available for only ₹249!
           </p>
         </motion.div>
 
-        {/* Search + Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row gap-6 mb-12"
-        >
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search artworks..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            />
+        {/* Mode selector + Search + Filter */}
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-12">
+          {/* Mode radio buttons */}
+          <div className="flex items-center space-x-4">
+            <label className="inline-flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="mode"
+                value="photo"
+                checked={mode === 'photo'}
+                onChange={() => setMode('photo')}
+                className="form-radio h-4 w-4 text-pink-600"
+              />
+              <span className="text-sm font-medium">Doodle Photo Edit</span>
+            </label>
+
+            <label className="inline-flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="mode"
+                value="sketch"
+                checked={mode === 'sketch'}
+                onChange={() => setMode('sketch')}
+                className="form-radio h-4 w-4 text-pink-600"
+              />
+              <span className="text-sm font-medium">Doodle Sketch Art (upload required)</span>
+            </label>
           </div>
 
-          {/* Category Filter */}
-          <div className="flex items-center space-x-2">
-            <Filter className="text-gray-400 w-5 h-5" />
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <motion.button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full font-medium transition-all ${
-                    selectedCategory === category
-                      ? 'pink-gradient text-white'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {category}
-                </motion.button>
-              ))}
+          {/* Spacer for responsiveness */}
+          <div className="flex-1" />
+
+          {/* Search + Filter group */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full md:w-auto flex flex-col md:flex-row gap-4 md:gap-6 items-stretch md:items-center"
+          >
+            {/* Search */}
+            <div className="relative flex-1 md:flex-none md:w-[370px]">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search artworks..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              />
             </div>
-          </div>
-        </motion.div>
+
+            {/* Category Filter */}
+            <div className="flex items-center space-x-2">
+              <Filter className="text-gray-400 w-5 h-5" />
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <motion.button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      selectedCategory === category
+                        ? 'pink-gradient text-white'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {category}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Hidden file input used for Sketch flow */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files ? e.target.files[0] : null
+            onFileSelected(f ?? null)
+          }}
+        />
 
         {/* Gallery Grid */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {filteredArtworks.map((artwork, index) => (
             <motion.div
               key={artwork.id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.6, delay: index * 0.05 }}
               viewport={{ once: true }}
               className="bg-gray-50 dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg card-hover group relative"
             >
@@ -199,6 +334,7 @@ export default function Gallery() {
                   className="absolute top-4 right-4 p-3 bg-white/90 dark:bg-gray-900/90 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-pink-500 hover:text-white"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
+                  aria-label={`Add ${artwork.title} to cart`}
                 >
                   <ShoppingCart className="w-5 h-5" />
                 </motion.button>
@@ -237,9 +373,12 @@ export default function Gallery() {
                   </div>
                 </div>
 
-                <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">
-                  {artwork.description}
-                </p>
+                {/* Description only for Photo Edit mode */}
+                {mode === 'photo' && (
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">
+                    {artwork.description}
+                  </p>
+                )}
 
                 <motion.button
                   onClick={() => handleAddToCart(artwork)}
@@ -248,7 +387,7 @@ export default function Gallery() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  <span>Add to Cart</span>
+                  <span>{mode === 'photo' ? 'Add to Cart' : 'Upload & Add'}</span>
                 </motion.button>
               </div>
             </motion.div>
