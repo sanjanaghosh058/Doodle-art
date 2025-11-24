@@ -71,6 +71,14 @@ const doodleArtworks = [
     image: '/doodle/custom doodle art 2.jpg',
     category: 'Portrait',
     description: 'Artistic portrait in unique style'
+  },
+  {
+    id: 9,
+    title: 'Custom Sketch',
+    price: 349,
+    image: '/doodle/ske.jpg',
+    category: 'Portrait',
+    description: 'Artistic portrait in unique style'
   }
 ]
 
