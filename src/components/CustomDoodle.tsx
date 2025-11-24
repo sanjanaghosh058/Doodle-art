@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Palette, Clock, Star, Send } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useCart } from '@/hooks/useCart'
 import toast from 'react-hot-toast'
 
@@ -37,6 +37,25 @@ export default function CustomDoodle() {
     email: ''
   })
 
+  // File upload state
+  const [file, setFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    // create preview when file changes
+    if (!file) {
+      setPreviewUrl(null)
+      return
+    }
+    const url = URL.createObjectURL(file)
+    setPreviewUrl(url)
+    return () => {
+      // cleanup object URL when component unmounts or file changes
+      URL.revokeObjectURL(url)
+    }
+  }, [file])
+
   const calculatePrice = () => {
     const style = customStyles.find(s => s.id === formData.style)
     const size = sizes.find(s => s.id === formData.size)
@@ -45,6 +64,38 @@ export default function CustomDoodle() {
     if (!style || !size || !deadline) return 0
     
     return Math.round(style.price * size.multiplier * deadline.multiplier)
+  }
+
+  const handleFileChange = (f: File | null) => {
+    if (!f) {
+      setFile(null)
+      return
+    }
+    // validate file type & size (optional)
+    if (!f.type.startsWith('image/')) {
+      toast.error('Please select a valid image file.')
+      return
+    }
+    // Example size limit: 5MB
+    const maxSize = 5 * 1024 * 1024
+    if (f.size > maxSize) {
+      toast.error('Image too large. Max 5MB.')
+      return
+    }
+    setFile(f)
+  }
+
+  const handlePickFile = () => {
+    inputRef.current?.click()
+  }
+
+  const handleRemoveFile = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+    }
+    setFile(null)
+    setPreviewUrl(null)
+    if (inputRef.current) inputRef.current.value = ''
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,7 +111,8 @@ export default function CustomDoodle() {
       id: Date.now(), // Unique ID for custom orders
       title: `Custom Doodle - ${customStyles.find(s => s.id === formData.style)?.name}`,
       price,
-      image: 'https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg', // Default image for custom orders
+      // Use previewUrl if available; otherwise default image
+      image: previewUrl || 'https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg',
       category: 'Custom',
       isCustom: true,
       customDetails: {
@@ -74,7 +126,7 @@ export default function CustomDoodle() {
     addItem(customItem)
     toast.success('Custom doodle added to cart!')
     
-    // Reset form
+    // Reset form + file
     setFormData({
       description: '',
       style: '',
@@ -83,6 +135,7 @@ export default function CustomDoodle() {
       name: '',
       email: ''
     })
+    handleRemoveFile()
   }
 
   return (
@@ -124,6 +177,66 @@ export default function CustomDoodle() {
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
                 required
               />
+            </div>
+
+            {/* Image Upload Placeholder */}
+            <div>
+              <label className="block text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                Upload a Reference Image (optional)
+              </label>
+
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files ? e.target.files[0] : null
+                  handleFileChange(f)
+                }}
+              />
+
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={handlePickFile}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handlePickFile() }}
+                className="flex items-center justify-between p-4 border-2 border-dashed rounded-xl cursor-pointer hover:border-pink-400 transition-colors bg-white dark:bg-gray-800"
+              >
+                <div className="flex items-center space-x-4">
+                  {previewUrl ? (
+                    <img src={previewUrl} alt="Preview" className="w-20 h-20 object-cover rounded-md" />
+                  ) : (
+                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-md flex items-center justify-center text-gray-500">
+                      <span>PNG / JPG</span>
+                    </div>
+                  )}
+
+                  <div>
+                    <div className="font-medium text-gray-900 dark:text-white">
+                      {previewUrl ? 'Reference image selected' : 'Click to upload or drag & drop'}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      Max 5MB. Optional: helps us match your vision.
+                    </div>
+                  </div>
+                </div>
+
+                {previewUrl ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleRemoveFile()
+                    }}
+                    className="text-sm text-red-500 hover:underline"
+                  >
+                    Remove
+                  </button>
+                ) : (
+                  <div className="text-sm text-gray-400">Browse</div>
+                )}
+              </div>
             </div>
 
             {/* Style Selection */}
