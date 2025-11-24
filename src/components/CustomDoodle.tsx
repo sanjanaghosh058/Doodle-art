@@ -8,9 +8,9 @@ import toast from 'react-hot-toast'
 
 const customStyles = [
   { id: 'minimalist', name: 'Minimalist', price: 249, description: 'Clean, simple lines' },
-  { id: 'detailed', name: 'Detailed', price: 249, description: 'Intricate patterns and details' },
-  { id: 'abstract', name: 'Abstract', price: 249, description: 'Creative and artistic interpretation' },
-  { id: 'realistic', name: 'Realistic', price: 249, description: 'Life-like representation' }
+  { id: 'detailed', name: 'Detailed', price: 800, description: 'Intricate patterns and details' },
+  { id: 'abstract', name: 'Abstract', price: 550, description: 'Creative and artistic interpretation' },
+  { id: 'realistic', name: 'Realistic', price: 650, description: 'Life-like representation' }
 ]
 
 const sizes = [
