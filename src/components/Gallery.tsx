@@ -74,7 +74,7 @@ const doodleArtworks = [
   }
 ]
 
-// Add universal discounted price (₹249)
+// Universal sale price
 const saleArtworks = doodleArtworks.map(item => ({
   ...item,
   salePrice: 249
@@ -84,6 +84,7 @@ const categories = ['All', 'Nature', 'Custom', 'Portrait', 'Inspirational', 'Fun
 type Category = typeof categories[number]
 type Artwork = typeof saleArtworks[0]
 
+// Note: useCart's addItem accepts a payload that may include quantity (see your updated store)
 export default function Gallery() {
   const { addItem } = useCart()
   const [selectedCategory, setSelectedCategory] = useState<Category>('All')
@@ -92,13 +93,14 @@ export default function Gallery() {
   // mode: 'photo' = Doodle Photo Edit (default), 'sketch' = Doodle Sketch Art (upload mandatory)
   const [mode, setMode] = useState<'photo' | 'sketch'>('photo')
 
-  // For sketch flow: pending artwork waiting for image upload
+  // For sketch flow: holds artwork waiting for file selection
   const [pendingArtwork, setPendingArtwork] = useState<Artwork | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  // We do not persist preview URL in state beyond adding to cart; we create one and pass it into cart item
   const [pendingFileUrl, setPendingFileUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    // cleanup object URL when component unmounts or pendingFileUrl changes
+    // cleanup any leftover temporary URL when component unmounts
     return () => {
       if (pendingFileUrl) URL.revokeObjectURL(pendingFileUrl)
     }
@@ -114,13 +116,14 @@ export default function Gallery() {
 
   const handleAddToCart = (artwork: Artwork) => {
     if (mode === 'photo') {
-      // simple flow: add item with salePrice (store may override to 249)
+      // Photo edit: add immediately with sale price (store may override to 249)
       addItem({
         id: artwork.id,
         title: artwork.title,
         price: artwork.salePrice ?? 249,
         image: artwork.image,
         category: artwork.category,
+        // quantity optional for addItem; specify 1 for clarity
         quantity: 1,
         isCustom: false,
       })
@@ -128,9 +131,8 @@ export default function Gallery() {
       return
     }
 
-    // sketch mode: require upload
+    // Sketch mode: require upload. Set pending artwork and open file picker.
     setPendingArtwork(artwork)
-    // trigger hidden file input
     fileInputRef.current?.click()
   }
 
@@ -138,7 +140,7 @@ export default function Gallery() {
     if (!file) {
       // user cancelled selection
       if (pendingArtwork) {
-        toast.error('Upload required for Sketch Art. Cancelled.')
+        toast.error('Image upload is required for Sketch Art. Action cancelled.')
         setPendingArtwork(null)
       }
       return
@@ -149,45 +151,48 @@ export default function Gallery() {
       return
     }
 
+    // optional size limit: 5MB
     const maxSize = 5 * 1024 * 1024
     if (file.size > maxSize) {
       toast.error('Image too large. Max 5MB.')
       return
     }
 
-    // create preview URL and add to cart using that URL as image
-    const url = URL.createObjectURL(file)
-    setPendingFileUrl(url)
-
     if (!pendingArtwork) {
       toast.error('No artwork selected to attach the image to.')
-      URL.revokeObjectURL(url)
-      setPendingFileUrl(null)
       return
     }
 
-    // add item with image set to the uploaded file preview
+    // create local preview URL and use it as the image for the cart item
+    const url = URL.createObjectURL(file)
+    // keep a temporary reference so we can revoke later if needed
+    setPendingFileUrl(url)
+
+    // Add the sketch item to cart.
+    // Note: description is OPTIONAL in sketch mode — we intentionally omit it from customDetails or set to undefined.
     addItem({
-      id: Date.now(), // unique id for this customised item
+      id: Date.now(), // unique id for customised sketch
       title: `${pendingArtwork.title} (Sketch Art)`,
       price: pendingArtwork.salePrice ?? 249,
-      image: url,
+      image: url, // local object URL; persists in cart state (valid for session)
       category: pendingArtwork.category,
       quantity: 1,
       isCustom: true,
       customDetails: {
-        description: '', // sketch mode: description not required
+        // description optional — do not set it when absent
         size: '',
         style: 'Sketch Art',
         deadline: ''
-      }
+      } as any
     })
 
     toast.success(`${pendingArtwork.title} (Sketch) added to cart!`)
-    // cleanup pending states
+
+    // clear pending state; do NOT revoke the URL immediately because it's used by cart item
     setPendingArtwork(null)
-    // Note: keep preview URL in cart item; we don't revoke it immediately as cart uses it.
     setPendingFileUrl(null)
+
+    // clear file input value so the user can re-select same file later if needed
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -235,14 +240,13 @@ export default function Gallery() {
                 onChange={() => setMode('sketch')}
                 className="form-radio h-4 w-4 text-pink-600"
               />
-              <span className="text-sm font-medium">Doodle Sketch Art (upload required)</span>
+              <span className="text-sm font-medium">Doodle Sketch Art (image required, description optional)</span>
             </label>
           </div>
 
-          {/* Spacer for responsiveness */}
           <div className="flex-1" />
 
-          {/* Search + Filter group */}
+          {/* Search + Filter */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -355,17 +359,14 @@ export default function Gallery() {
                   {/* Price Section */}
                   <div className="text-right">
                     <div className="flex flex-col items-end">
-                      {/* Original Price (Struck through) */}
                       <div className="text-sm sm:text-base text-gray-400 line-through">
                         ₹{artwork.price.toLocaleString()}
                       </div>
 
-                      {/* Discounted Price */}
                       <div className="text-xl sm:text-2xl font-bold text-pink-600 dark:text-pink-400">
                         ₹{artwork.salePrice.toLocaleString()}
                       </div>
 
-                      {/* Badge */}
                       <span className="text-xs bg-pink-500/10 text-pink-600 dark:text-pink-400 px-2 py-1 rounded-full mt-1">
                         End of Year Sale 🎉
                       </span>
