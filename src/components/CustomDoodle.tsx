@@ -28,6 +28,9 @@ const deadlines = [
 
 export default function CustomDoodle() {
   const { addItem } = useCart()
+
+  const [mode, setMode] = useState<'picture' | 'sketch'>('picture') // picture = default, sketch = mandatory upload
+
   const [formData, setFormData] = useState({
     description: '',
     style: '',
@@ -60,9 +63,9 @@ export default function CustomDoodle() {
     const style = customStyles.find(s => s.id === formData.style)
     const size = sizes.find(s => s.id === formData.size)
     const deadline = deadlines.find(d => d.id === formData.deadline)
-    
+
     if (!style || !size || !deadline) return 0
-    
+
     return Math.round(style.price * size.multiplier * deadline.multiplier)
   }
 
@@ -100,32 +103,58 @@ export default function CustomDoodle() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!formData.description || !formData.style || !formData.size || !formData.deadline) {
-      toast.error('Please fill in all required fields')
+
+    // Validation:
+    // - For 'picture' mode: description, style, size, deadline required (description remains required)
+    // - For 'sketch' mode: style, size, deadline required; description is optional; file is mandatory
+    if (!formData.style || !formData.size || !formData.deadline) {
+      toast.error('Please fill in style, size and deadline.')
+      return
+    }
+
+    if (mode === 'picture' && !formData.description) {
+      toast.error('Please provide a description for picture-based doodle.')
+      return
+    }
+
+    if (mode === 'sketch' && !file) {
+      toast.error('Image upload is required for Sketch option.')
       return
     }
 
     const price = calculatePrice()
+
     const customItem = {
       id: Date.now(), // Unique ID for custom orders
-      title: `Custom Doodle - ${customStyles.find(s => s.id === formData.style)?.name}`,
+      title: `Custom Doodle - ${customStyles.find(s => s.id === formData.style)?.name || 'Custom'}`,
       price,
-      // Use previewUrl if available; otherwise default image
+      // Use previewUrl (uploaded image) when available; otherwise fallback image
       image: previewUrl || 'https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg',
       category: 'Custom',
       isCustom: true,
       customDetails: {
-        description: formData.description,
+        // description optional in sketch mode
+        description: mode === 'picture' ? formData.description : formData.description || undefined,
         size: sizes.find(s => s.id === formData.size)?.name || '',
         style: customStyles.find(s => s.id === formData.style)?.name || '',
-        deadline: deadlines.find(d => d.id === formData.deadline)?.name || ''
+        deadline: deadlines.find(d => d.id === formData.deadline)?.name || '',
+        mode // include which mode user chose
       }
     }
 
-    addItem(customItem)
+    // addItem expects payload without explicit `quantity` (store will default)
+    addItem({
+      id: customItem.id,
+      title: customItem.title,
+      price: customItem.price,
+      image: customItem.image,
+      category: customItem.category,
+      isCustom: true,
+      customDetails: customItem.customDetails as any
+    })
+
     toast.success('Custom doodle added to cart!')
-    
+
     // Reset form + file
     setFormData({
       description: '',
@@ -136,6 +165,8 @@ export default function CustomDoodle() {
       email: ''
     })
     handleRemoveFile()
+    // reset mode to default picture (optional)
+    setMode('picture')
   }
 
   return (
@@ -146,43 +177,75 @@ export default function CustomDoodle() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Order <span className="gradient-text">Custom Doodle</span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Have something specific in mind? Let us create a unique doodle just for you!
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Choose how you'd like your doodle — by photo or as a sketch.
           </p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
           className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl p-8"
         >
+          {/* Mode selector */}
+          <div className="mb-6 flex items-center gap-6">
+            <label className="inline-flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="doodleMode"
+                value="picture"
+                checked={mode === 'picture'}
+                onChange={() => setMode('picture')}
+                className="form-radio h-4 w-4 text-pink-600"
+              />
+              <span className="text-sm font-medium">Doodle by Pictures (default)</span>
+            </label>
+
+            <label className="inline-flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="doodleMode"
+                value="sketch"
+                checked={mode === 'sketch'}
+                onChange={() => setMode('sketch')}
+                className="form-radio h-4 w-4 text-pink-600"
+              />
+              <span className="text-sm font-medium">Doodle by Sketch (image required)</span>
+            </label>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Description */}
             <div>
               <label className="block text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                Describe Your Vision *
+                Describe Your Vision {mode === 'picture' ? '*' : '(optional)'}
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Tell us what you'd like us to draw. Be as detailed as possible..."
+                placeholder={
+                  mode === 'picture'
+                    ? "Tell us what you'd like us to draw. Be as detailed as possible..."
+                    : "Optional notes for the sketch (e.g., preferred mood, colors)."
+                }
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
-                required
+                // required only in picture mode
+                required={mode === 'picture'}
               />
             </div>
 
             {/* Image Upload Placeholder */}
             <div>
               <label className="block text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                Upload a Reference Image (optional)
+                {mode === 'sketch' ? 'Upload Reference Image (required)' : 'Upload Reference Image (optional)'}
               </label>
 
               <input
@@ -217,7 +280,7 @@ export default function CustomDoodle() {
                       {previewUrl ? 'Reference image selected' : 'Click to upload or drag & drop'}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      Max 5MB. Optional: helps us match your vision.
+                      Max 5MB. {mode === 'sketch' ? 'Required for Sketch.' : 'Optional: helps us match your vision.'}
                     </div>
                   </div>
                 </div>
