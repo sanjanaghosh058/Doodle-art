@@ -29,7 +29,8 @@ const deadlines = [
 export default function CustomDoodle() {
   const { addItem } = useCart()
 
-  const [mode, setMode] = useState<'picture' | 'sketch'>('picture') // picture = default, sketch = mandatory upload
+  // Modes: picture (default) or sketch (upload mandatory)
+  const [mode, setMode] = useState<'picture' | 'sketch'>('picture')
 
   const [formData, setFormData] = useState({
     description: '',
@@ -46,7 +47,6 @@ export default function CustomDoodle() {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    // create preview when file changes
     if (!file) {
       setPreviewUrl(null)
       return
@@ -54,7 +54,6 @@ export default function CustomDoodle() {
     const url = URL.createObjectURL(file)
     setPreviewUrl(url)
     return () => {
-      // cleanup object URL when component unmounts or file changes
       URL.revokeObjectURL(url)
     }
   }, [file])
@@ -74,12 +73,10 @@ export default function CustomDoodle() {
       setFile(null)
       return
     }
-    // validate file type & size (optional)
     if (!f.type.startsWith('image/')) {
       toast.error('Please select a valid image file.')
       return
     }
-    // Example size limit: 5MB
     const maxSize = 5 * 1024 * 1024
     if (f.size > maxSize) {
       toast.error('Image too large. Max 5MB.')
@@ -104,19 +101,19 @@ export default function CustomDoodle() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validation:
-    // - For 'picture' mode: description, style, size, deadline required (description remains required)
-    // - For 'sketch' mode: style, size, deadline required; description is optional; file is mandatory
+    // Required fields: style, size, deadline
     if (!formData.style || !formData.size || !formData.deadline) {
-      toast.error('Please fill in style, size and deadline.')
+      toast.error('Please select style, size and deadline.')
       return
     }
 
+    // picture mode: description required
     if (mode === 'picture' && !formData.description) {
       toast.error('Please provide a description for picture-based doodle.')
       return
     }
 
+    // sketch mode: file required
     if (mode === 'sketch' && !file) {
       toast.error('Image upload is required for Sketch option.')
       return
@@ -125,24 +122,22 @@ export default function CustomDoodle() {
     const price = calculatePrice()
 
     const customItem = {
-      id: Date.now(), // Unique ID for custom orders
+      id: Date.now(),
       title: `Custom Doodle - ${customStyles.find(s => s.id === formData.style)?.name || 'Custom'}`,
       price,
-      // Use previewUrl (uploaded image) when available; otherwise fallback image
       image: previewUrl || 'https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg',
       category: 'Custom',
       isCustom: true,
       customDetails: {
-        // description optional in sketch mode
         description: mode === 'picture' ? formData.description : formData.description || undefined,
         size: sizes.find(s => s.id === formData.size)?.name || '',
         style: customStyles.find(s => s.id === formData.style)?.name || '',
         deadline: deadlines.find(d => d.id === formData.deadline)?.name || '',
-        mode // include which mode user chose
+        mode
       }
     }
 
-    // addItem expects payload without explicit `quantity` (store will default)
+    // addItem payload should omit quantity (store will default/increment)
     addItem({
       id: customItem.id,
       title: customItem.title,
@@ -155,7 +150,7 @@ export default function CustomDoodle() {
 
     toast.success('Custom doodle added to cart!')
 
-    // Reset form + file
+    // Reset
     setFormData({
       description: '',
       style: '',
@@ -165,7 +160,6 @@ export default function CustomDoodle() {
       email: ''
     })
     handleRemoveFile()
-    // reset mode to default picture (optional)
     setMode('picture')
   }
 
@@ -194,31 +188,31 @@ export default function CustomDoodle() {
           viewport={{ once: true }}
           className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl p-8"
         >
-          {/* Mode selector */}
-          <div className="mb-6 flex items-center gap-6">
-            <label className="inline-flex items-center space-x-2 cursor-pointer">
-              <input
-                type="radio"
-                name="doodleMode"
-                value="picture"
-                checked={mode === 'picture'}
-                onChange={() => setMode('picture')}
-                className="form-radio h-4 w-4 text-pink-600"
-              />
-              <span className="text-sm font-medium">Doodle by Pictures (default)</span>
-            </label>
+          {/* Mode selector — visually styled buttons */}
+          <div className="mb-6 flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setMode('picture')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors border ${
+                mode === 'picture'
+                  ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white border-transparent shadow'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:border-pink-400'
+              }`}
+            >
+              Doodle by Pictures
+            </button>
 
-            <label className="inline-flex items-center space-x-2 cursor-pointer">
-              <input
-                type="radio"
-                name="doodleMode"
-                value="sketch"
-                checked={mode === 'sketch'}
-                onChange={() => setMode('sketch')}
-                className="form-radio h-4 w-4 text-pink-600"
-              />
-              <span className="text-sm font-medium">Doodle by Sketch (image required)</span>
-            </label>
+            <button
+              type="button"
+              onClick={() => setMode('sketch')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors border ${
+                mode === 'sketch'
+                  ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white border-transparent shadow'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:border-pink-400'
+              }`}
+            >
+              Doodle by Sketch (image required)
+            </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
@@ -237,12 +231,11 @@ export default function CustomDoodle() {
                 }
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
-                // required only in picture mode
                 required={mode === 'picture'}
               />
             </div>
 
-            {/* Image Upload Placeholder */}
+            {/* Image Upload */}
             <div>
               <label className="block text-lg font-semibold text-gray-900 dark:text-white mb-3">
                 {mode === 'sketch' ? 'Upload Reference Image (required)' : 'Upload Reference Image (optional)'}
@@ -430,7 +423,7 @@ export default function CustomDoodle() {
             {/* Submit Button */}
             <motion.button
               type="submit"
-              className="w-full py-4 pink-gradient text-white rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity flex items-center justify-center space-x-3"
+              className="w-full py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-xl font-semibold text-lg hover:opacity-90 transition-opacity flex items-center justify-center space-x-3"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
