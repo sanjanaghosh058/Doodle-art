@@ -7,7 +7,7 @@ import Image from "next/image";
 const teamMembers = [
   {
     name: "Sanjana Ghosh",
-    role: "CEO & Artist",
+    role: "FOUNDER & Artist",
     alias: "blvshy",
     description:
       "The creative visionary whose passion for doodling sparked our journey. She transforms ideas into beautiful, hand-crafted art pieces.",
