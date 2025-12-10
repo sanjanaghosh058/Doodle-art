@@ -91,8 +91,8 @@ export default function AboutUs() {
           </p>
         </motion.div>
 
-        {/* Team Members - right aligned on large screens */}
-        <div className="flex flex-col lg:flex-row lg:justify-end gap-8 mb-20">
+        {/* Team Members - right aligned on large screens with increased spacing */}
+        <div className="flex flex-col lg:flex-row lg:justify-end lg:items-start gap-12 mb-20">
           {teamMembers.map((member, index) => (
             <motion.div
               key={member.name}
