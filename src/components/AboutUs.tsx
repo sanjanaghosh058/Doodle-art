@@ -22,22 +22,6 @@ const teamMembers = [
     ],
   },
   {
-    name: "Subhrajit Mukherjee",
-    role: "CTO",
-    alias: "Tech Maestro",
-    description:
-      "The tech architect behind our digital ecosystem. Subhrajit ensures our platform is fast, scalable, and beautifully engineered to showcase creativity seamlessly.",
-    image: "/about/subhrajit.jpg",
-    icon: Code,
-    color: "from-blue-500 to-cyan-500",
-    skills: [
-      "Next.js & React",
-      "System Architecture",
-      "Automation & AI Integration",
-      "Performance Optimization",
-    ],
-  },
-  {
     name: "Somnil Neogi",
     role: "CMO",
     alias: "Rick",
