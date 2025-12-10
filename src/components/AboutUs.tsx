@@ -23,7 +23,7 @@ const teamMembers = [
   },
   {
     name: "Somnil Neogi",
-    role: "CMO",
+    role: "CO-Founder",
     alias: "Rick",
     description:
       "The marketing maestro who ensures our doodles reach the right audience in the most impactful way.",
