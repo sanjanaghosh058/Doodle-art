@@ -91,8 +91,8 @@ export default function AboutUs() {
           </p>
         </motion.div>
 
-        {/* Team Members */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-20">
+        {/* Team Members - right aligned on large screens */}
+        <div className="flex flex-col lg:flex-row lg:justify-end gap-8 mb-20">
           {teamMembers.map((member, index) => (
             <motion.div
               key={member.name}
@@ -100,7 +100,7 @@ export default function AboutUs() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="group"
+              className="group w-full max-w-md lg:max-w-sm"
             >
               <motion.div
                 className="bg-gray-800 rounded-3xl p-8 border border-gray-700 hover:border-pink-500/50 transition-all duration-500 relative overflow-hidden"
